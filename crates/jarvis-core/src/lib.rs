@@ -5,6 +5,7 @@ pub mod config;
 pub mod error;
 pub mod logging;
 pub mod permissions;
+pub mod secrets;
 
 pub use config::AppConfig;
 pub use error::{CoreError, CoreResult};

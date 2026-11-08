@@ -13,6 +13,9 @@ pub enum CoreError {
 
     #[error("action '{0}' requires explicit user approval")]
     PermissionDenied(String),
+
+    #[error("credential storage error: {0}")]
+    Secret(String),
 }
 
 pub type CoreResult<T> = Result<T, CoreError>;

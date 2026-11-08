@@ -41,6 +41,7 @@ mod tests {
                     role: Role::User,
                     content: "hello".to_string(),
                 }],
+                ..Default::default()
             })
             .await
             .expect("NullProvider never fails");

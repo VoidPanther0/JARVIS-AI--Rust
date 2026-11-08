@@ -21,6 +21,14 @@ impl MessageRole {
             MessageRole::Assistant => "assistant",
         }
     }
+
+    fn from_db(value: &str) -> Self {
+        match value {
+            "system" => MessageRole::System,
+            "assistant" => MessageRole::Assistant,
+            _ => MessageRole::User,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

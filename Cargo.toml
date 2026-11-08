@@ -28,6 +28,8 @@ tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 sqlx = { version = "0.7", default-features = false, features = ["runtime-tokio", "sqlite", "macros", "migrate"] }
 async-trait = "0.1"
 directories = "5"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+keyring = "3"
 
 jarvis-core = { path = "crates/jarvis-core" }
 jarvis-ai = { path = "crates/jarvis-ai" }
