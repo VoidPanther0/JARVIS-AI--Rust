@@ -18,7 +18,7 @@ authors = ["JARVIS AI Contributors"]
 repository = "https://github.com/jarvis-ai/jarvis"
 
 [workspace.dependencies]
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "fs"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "fs", "process"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "1"

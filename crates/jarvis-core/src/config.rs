@@ -8,17 +8,12 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 /// Logical runtime environment. Affects logging verbosity and defaults.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Environment {
+    #[default]
     Development,
     Production,
-}
-
-impl Default for Environment {
-    fn default() -> Self {
-        Environment::Development
-    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
