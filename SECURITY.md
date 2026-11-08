@@ -30,3 +30,9 @@ Include:
 
 This project is in Phase 1 (`0.1.0-alpha.x`). Only the latest released
 version receives fixes during this stage.
+
+## Security model and known limitations
+
+For the full threat model, what is and isn't enforced today, and what to
+check when reviewing a change for security impact, see
+[`docs/security.md`](docs/security.md).
