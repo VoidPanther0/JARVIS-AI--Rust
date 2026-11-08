@@ -16,10 +16,19 @@ use serde::{Deserialize, Serialize};
 pub enum SensitiveAction {
     /// Run a specific, pre-validated executable with fixed arguments.
     /// There is no "run this string as a shell command" variant.
-    RunProgram { program: String, args: Vec<String> },
-    ReadFile { path: String },
-    WriteFile { path: String },
-    DeleteFile { path: String },
+    RunProgram {
+        program: String,
+        args: Vec<String>,
+    },
+    ReadFile {
+        path: String,
+    },
+    WriteFile {
+        path: String,
+    },
+    DeleteFile {
+        path: String,
+    },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

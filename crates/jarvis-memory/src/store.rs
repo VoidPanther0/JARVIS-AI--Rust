@@ -45,10 +45,14 @@ impl MemoryStore {
             std::fs::create_dir_all(parent)?;
         }
 
-        let options = SqliteConnectOptions::from_str(&format!("sqlite://{}", path.as_ref().display()))?
-            .create_if_missing(true);
+        let options =
+            SqliteConnectOptions::from_str(&format!("sqlite://{}", path.as_ref().display()))?
+                .create_if_missing(true);
 
-        let pool = SqlitePoolOptions::new().max_connections(5).connect_with(options).await?;
+        let pool = SqlitePoolOptions::new()
+            .max_connections(5)
+            .connect_with(options)
+            .await?;
 
         sqlx::migrate!("src/migrations").run(&pool).await?;
 
@@ -68,14 +72,13 @@ impl MemoryStore {
         role: MessageRole,
         content: &str,
     ) -> MemoryResult<i64> {
-        let result = sqlx::query(
-            "INSERT INTO messages (conversation_id, role, content) VALUES (?, ?, ?)",
-        )
-        .bind(conversation_id)
-        .bind(role.as_str())
-        .bind(content)
-        .execute(&self.pool)
-        .await?;
+        let result =
+            sqlx::query("INSERT INTO messages (conversation_id, role, content) VALUES (?, ?, ?)")
+                .bind(conversation_id)
+                .bind(role.as_str())
+                .bind(content)
+                .execute(&self.pool)
+                .await?;
         Ok(result.last_insert_rowid())
     }
 
@@ -92,10 +95,11 @@ impl MemoryStore {
     }
 
     pub async fn get_memory(&self, key: &str) -> MemoryResult<Option<String>> {
-        let row: Option<(String,)> = sqlx::query_as("SELECT value FROM memory_entries WHERE key = ?")
-            .bind(key)
-            .fetch_optional(&self.pool)
-            .await?;
+        let row: Option<(String,)> =
+            sqlx::query_as("SELECT value FROM memory_entries WHERE key = ?")
+                .bind(key)
+                .fetch_optional(&self.pool)
+                .await?;
         Ok(row.map(|(value,)| value))
     }
 }

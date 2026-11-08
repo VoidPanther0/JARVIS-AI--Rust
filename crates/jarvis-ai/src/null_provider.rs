@@ -17,9 +17,10 @@ impl AiProvider for NullProvider {
         Ok(ChatResponse {
             message: ChatMessage {
                 role: Role::Assistant,
-                content: "No AI provider is configured yet. Set JARVIS_AI_PROVIDER and wire up \
+                content:
+                    "No AI provider is configured yet. Set JARVIS_AI_PROVIDER and wire up \
                           a provider implementing `jarvis_ai::AiProvider` to enable real responses."
-                    .to_string(),
+                        .to_string(),
             },
         })
     }

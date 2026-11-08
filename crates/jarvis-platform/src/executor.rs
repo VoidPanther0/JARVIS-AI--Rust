@@ -8,7 +8,10 @@ use tracing::{info, warn};
 /// calling this function; nothing in this crate asks the user itself.
 /// `RunProgram` spawns a specific, pre-validated executable with a fixed
 /// argument list — there is no shell interpretation of the arguments.
-pub async fn execute(action: SensitiveAction, decision: PermissionDecision) -> PlatformResult<String> {
+pub async fn execute(
+    action: SensitiveAction,
+    decision: PermissionDecision,
+) -> PlatformResult<String> {
     if decision != PermissionDecision::Approved {
         warn!(?action, "sensitive action denied");
         return Err(PlatformError::Denied);
@@ -18,7 +21,10 @@ pub async fn execute(action: SensitiveAction, decision: PermissionDecision) -> P
 
     match action {
         SensitiveAction::RunProgram { program, args } => {
-            let output = tokio::process::Command::new(&program).args(&args).output().await?;
+            let output = tokio::process::Command::new(&program)
+                .args(&args)
+                .output()
+                .await?;
             Ok(String::from_utf8_lossy(&output.stdout).to_string())
         }
         SensitiveAction::ReadFile { path } => {

@@ -6,7 +6,8 @@ use tracing_subscriber::{fmt, EnvFilter};
 ///
 /// `default_level` is used when `RUST_LOG` / `JARVIS_LOG_LEVEL` is unset.
 pub fn init(default_level: &str) {
-    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default_level));
+    let filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default_level));
 
     fmt()
         .with_env_filter(filter)

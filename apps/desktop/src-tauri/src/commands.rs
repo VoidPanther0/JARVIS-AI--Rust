@@ -9,7 +9,10 @@ use tauri::State;
 #[tauri::command]
 pub async fn send_message(state: State<'_, AppState>, message: String) -> Result<String, String> {
     let provider_name = state.config.ai_provider.as_deref().unwrap_or("null");
-    let provider = state.providers.get(provider_name).map_err(|e| e.to_string())?;
+    let provider = state
+        .providers
+        .get(provider_name)
+        .map_err(|e| e.to_string())?;
 
     let response = provider
         .chat(ChatRequest {
@@ -22,13 +25,20 @@ pub async fn send_message(state: State<'_, AppState>, message: String) -> Result
         .map_err(|e| e.to_string())?;
 
     let memory = state.memory().await;
-    let conversation_id = memory.start_conversation().await.map_err(|e| e.to_string())?;
+    let conversation_id = memory
+        .start_conversation()
+        .await
+        .map_err(|e| e.to_string())?;
     memory
         .add_message(conversation_id, MessageRole::User, &message)
         .await
         .map_err(|e| e.to_string())?;
     memory
-        .add_message(conversation_id, MessageRole::Assistant, &response.message.content)
+        .add_message(
+            conversation_id,
+            MessageRole::Assistant,
+            &response.message.content,
+        )
         .await
         .map_err(|e| e.to_string())?;
 
