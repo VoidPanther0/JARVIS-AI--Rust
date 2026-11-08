@@ -1,0 +1,107 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0e14;
+  --panel: #141925;
+  --accent: #35c9ff;
+  --text: #e6ecf5;
+  --text-dim: #8b94a7;
+  --border: #232a3a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.app__brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.app__version {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chat__message {
+  max-width: 70%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.6rem;
+  line-height: 1.4;
+  font-size: 0.92rem;
+}
+
+.chat__message--assistant {
+  align-self: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.chat__message--user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #06121a;
+}
+
+.composer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.composer__input {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.composer__input:focus {
+  outline: 2px solid var(--accent);
+}
+
+.composer__send {
+  background: var(--accent);
+  color: #06121a;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}

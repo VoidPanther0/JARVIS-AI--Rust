@@ -1,0 +1,16 @@
+[package]
+name = "jarvis-memory"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "SQLite-backed persistent memory and migrations for JARVIS."
+
+[dependencies]
+jarvis-core.workspace = true
+sqlx.workspace = true
+tokio.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true

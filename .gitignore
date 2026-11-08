@@ -1,0 +1,25 @@
+/target
+**/target
+
+# Node / Tauri CLI
+node_modules/
+apps/desktop/node_modules/
+
+# Tauri build output
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
+
+# Environment
+.env
+.env.local
+
+# Local data
+*.sqlite3
+*.sqlite3-journal
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,43 @@
+[workspace]
+resolver = "2"
+members = [
+    "apps/desktop/src-tauri",
+    "crates/jarvis-core",
+    "crates/jarvis-ai",
+    "crates/jarvis-voice",
+    "crates/jarvis-memory",
+    "crates/jarvis-platform",
+]
+
+[workspace.package]
+version = "0.1.0-alpha.1"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT"
+authors = ["JARVIS AI Contributors"]
+repository = "https://github.com/jarvis-ai/jarvis"
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "fs"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+sqlx = { version = "0.7", default-features = false, features = ["runtime-tokio", "sqlite", "macros", "migrate"] }
+async-trait = "0.1"
+directories = "5"
+
+jarvis-core = { path = "crates/jarvis-core" }
+jarvis-ai = { path = "crates/jarvis-ai" }
+jarvis-voice = { path = "crates/jarvis-voice" }
+jarvis-memory = { path = "crates/jarvis-memory" }
+jarvis-platform = { path = "crates/jarvis-platform" }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -4,6 +4,9 @@ Open-source personal AI assistant built with Rust.
 
 JARVIS is a cross-platform AI assistant designed to bring voice interaction, intelligent conversations, and desktop automation to Windows, Linux, macOS, Android, and eventually iOS.
 
+**Status: Phase 1 (foundation).** See [CHANGELOG.md](CHANGELOG.md) for what
+is implemented so far and what is intentionally still a stub.
+
 ## Planned Features
 - AI-powered conversations
 - Voice recognition and speech synthesis
@@ -26,10 +29,26 @@ JARVIS is a cross-platform AI assistant designed to bring voice interaction, int
 ## Technology
 - Rust
 - Tauri 2
-- SQLite
+- SQLite (via `sqlx`)
 - Tokio
-- Whisper
-- Piper
+- Whisper / Piper (planned for voice, not yet wired up)
+
+## Project structure
+
+```
+apps/
+  desktop/              Tauri desktop application
+    src-tauri/          Rust backend (commands, state, Tauri config)
+    ui/                 HTML/CSS/JS frontend
+crates/
+  jarvis-core/          Config, logging, errors, permission model
+  jarvis-ai/            AI provider trait + registry (no provider committed)
+  jarvis-voice/         Voice I/O trait shape (not implemented yet)
+  jarvis-memory/        SQLite storage + migrations
+  jarvis-platform/      Permission-checked system access
+docs/                   Development and architecture docs
+.github/workflows/      CI and release automation
+```
 
 ## Installation
 
@@ -37,8 +56,24 @@ Official installers will be published through GitHub Releases when available.
 
 ## Development
 
-This project is under active development. Features and platform support will be introduced gradually.
+See [docs/development.md](docs/development.md) for prerequisites, running
+the app locally, and building the Windows installer.
+
+```powershell
+cd apps/desktop
+npm install
+npm run dev
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for the project's safety model and how to
+report vulnerabilities.
 
 ## License
 
-MIT License
+MIT License — see [LICENSE](LICENSE).
