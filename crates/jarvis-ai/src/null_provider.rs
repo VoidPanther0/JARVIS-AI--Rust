@@ -25,3 +25,30 @@ impl AiProvider for NullProvider {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn chat_returns_explanatory_assistant_message() {
+        let provider = NullProvider;
+        assert_eq!(provider.name(), "null");
+
+        let response = provider
+            .chat(ChatRequest {
+                messages: vec![ChatMessage {
+                    role: Role::User,
+                    content: "hello".to_string(),
+                }],
+            })
+            .await
+            .expect("NullProvider never fails");
+
+        assert_eq!(response.message.role, Role::Assistant);
+        assert!(response
+            .message
+            .content
+            .contains("No AI provider is configured"));
+    }
+}

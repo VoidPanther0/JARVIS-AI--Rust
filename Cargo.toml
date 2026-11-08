@@ -15,7 +15,7 @@ edition = "2021"
 rust-version = "1.75"
 license = "MIT"
 authors = ["JARVIS AI Contributors"]
-repository = "https://github.com/jarvis-ai/jarvis"
+repository = "https://github.com/VoidPanther0/JARVIS-AI--Rust"
 
 [workspace.dependencies]
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "fs", "process"] }

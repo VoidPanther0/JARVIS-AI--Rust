@@ -51,3 +51,48 @@ impl PermissionRequest {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new_stores_action_and_reason() {
+        let request = PermissionRequest::new(
+            SensitiveAction::ReadFile {
+                path: "C:/data/notes.txt".to_string(),
+            },
+            "user asked to summarize this file",
+        );
+
+        assert_eq!(request.reason, "user asked to summarize this file");
+        match request.action {
+            SensitiveAction::ReadFile { path } => assert_eq!(path, "C:/data/notes.txt"),
+            other => panic!("expected ReadFile, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn sensitive_action_round_trips_through_json() {
+        let action = SensitiveAction::RunProgram {
+            program: "git".to_string(),
+            args: vec!["status".to_string()],
+        };
+
+        let json = serde_json::to_string(&action).expect("serialize");
+        let decoded: SensitiveAction = serde_json::from_str(&json).expect("deserialize");
+
+        match decoded {
+            SensitiveAction::RunProgram { program, args } => {
+                assert_eq!(program, "git");
+                assert_eq!(args, vec!["status".to_string()]);
+            }
+            other => panic!("expected RunProgram, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn permission_decision_distinguishes_approved_and_denied() {
+        assert_ne!(PermissionDecision::Approved, PermissionDecision::Denied);
+    }
+}

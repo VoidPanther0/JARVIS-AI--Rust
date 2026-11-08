@@ -36,3 +36,27 @@ impl ProviderRegistry {
             .ok_or_else(|| AiError::ProviderNotFound(name.to_string()))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_registry_has_null_provider() {
+        let registry = ProviderRegistry::default();
+        let provider = registry
+            .get("null")
+            .expect("null provider is always registered");
+        assert_eq!(provider.name(), "null");
+    }
+
+    #[test]
+    fn unknown_provider_name_is_an_error() {
+        let registry = ProviderRegistry::new();
+        match registry.get("does-not-exist") {
+            Err(AiError::ProviderNotFound(name)) => assert_eq!(name, "does-not-exist"),
+            Ok(_) => panic!("expected ProviderNotFound, got Ok"),
+            Err(_) => panic!("expected ProviderNotFound, got a different error"),
+        }
+    }
+}

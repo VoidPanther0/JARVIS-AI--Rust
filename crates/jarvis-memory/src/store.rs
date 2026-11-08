@@ -103,3 +103,68 @@ impl MemoryStore {
         Ok(row.map(|(value,)| value))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A unique path under the OS temp directory so parallel test runs
+    /// never collide on the same SQLite file.
+    fn temp_db_path(name: &str) -> std::path::PathBuf {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock is after the epoch")
+            .as_nanos();
+        std::env::temp_dir().join(format!("jarvis-memory-test-{name}-{unique}.sqlite3"))
+    }
+
+    #[tokio::test]
+    async fn conversation_and_messages_round_trip() {
+        let path = temp_db_path("conversation");
+        let store = MemoryStore::open(&path)
+            .await
+            .expect("opening a fresh SQLite file should succeed");
+
+        let conversation_id = store
+            .start_conversation()
+            .await
+            .expect("inserting a conversation should succeed");
+
+        store
+            .add_message(conversation_id, MessageRole::User, "hello")
+            .await
+            .expect("inserting a user message should succeed");
+        store
+            .add_message(conversation_id, MessageRole::Assistant, "hi there")
+            .await
+            .expect("inserting an assistant message should succeed");
+
+        drop(store);
+        let _ = std::fs::remove_file(&path);
+    }
+
+    #[tokio::test]
+    async fn memory_entries_round_trip_and_overwrite() {
+        let path = temp_db_path("kv");
+        let store = MemoryStore::open(&path)
+            .await
+            .expect("opening a fresh SQLite file should succeed");
+
+        assert_eq!(store.get_memory("favorite_color").await.unwrap(), None);
+
+        store.set_memory("favorite_color", "blue").await.unwrap();
+        assert_eq!(
+            store.get_memory("favorite_color").await.unwrap(),
+            Some("blue".to_string())
+        );
+
+        store.set_memory("favorite_color", "green").await.unwrap();
+        assert_eq!(
+            store.get_memory("favorite_color").await.unwrap(),
+            Some("green".to_string())
+        );
+
+        drop(store);
+        let _ = std::fs::remove_file(&path);
+    }
+}

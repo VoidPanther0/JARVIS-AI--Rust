@@ -28,3 +28,30 @@ pub trait TextToSpeech: Send + Sync {
         Err(VoiceError::NotImplemented)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct NoopVoice;
+    impl SpeechToText for NoopVoice {}
+    impl TextToSpeech for NoopVoice {}
+
+    #[test]
+    fn default_speech_to_text_is_not_implemented() {
+        let voice = NoopVoice;
+        assert!(matches!(
+            voice.transcribe(&[]),
+            Err(VoiceError::NotImplemented)
+        ));
+    }
+
+    #[test]
+    fn default_text_to_speech_is_not_implemented() {
+        let voice = NoopVoice;
+        assert!(matches!(
+            voice.synthesize("hello"),
+            Err(VoiceError::NotImplemented)
+        ));
+    }
+}

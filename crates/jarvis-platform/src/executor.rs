@@ -44,3 +44,69 @@ pub async fn execute(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn temp_file_path(name: &str) -> std::path::PathBuf {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock is after the epoch")
+            .as_nanos();
+        std::env::temp_dir().join(format!("jarvis-platform-test-{name}-{unique}.txt"))
+    }
+
+    #[tokio::test]
+    async fn denied_decision_never_runs_the_action() {
+        let result = execute(
+            SensitiveAction::ReadFile {
+                path: "irrelevant.txt".to_string(),
+            },
+            PermissionDecision::Denied,
+        )
+        .await;
+
+        assert!(matches!(result, Err(PlatformError::Denied)));
+    }
+
+    #[tokio::test]
+    async fn approved_read_file_returns_contents() {
+        let path = temp_file_path("read");
+        tokio::fs::write(&path, "hello from jarvis-platform tests")
+            .await
+            .expect("writing the fixture file should succeed");
+
+        let result = execute(
+            SensitiveAction::ReadFile {
+                path: path.to_string_lossy().to_string(),
+            },
+            PermissionDecision::Approved,
+        )
+        .await
+        .expect("reading an existing file should succeed");
+
+        assert_eq!(result, "hello from jarvis-platform tests");
+
+        let _ = tokio::fs::remove_file(&path).await;
+    }
+
+    #[tokio::test]
+    async fn approved_delete_file_removes_it() {
+        let path = temp_file_path("delete");
+        tokio::fs::write(&path, "to be deleted")
+            .await
+            .expect("writing the fixture file should succeed");
+
+        execute(
+            SensitiveAction::DeleteFile {
+                path: path.to_string_lossy().to_string(),
+            },
+            PermissionDecision::Approved,
+        )
+        .await
+        .expect("deleting an existing file should succeed");
+
+        assert!(!path.exists());
+    }
+}

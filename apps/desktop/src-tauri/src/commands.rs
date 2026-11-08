@@ -24,7 +24,7 @@ pub async fn send_message(state: State<'_, AppState>, message: String) -> Result
         .await
         .map_err(|e| e.to_string())?;
 
-    let memory = state.memory().await;
+    let memory = state.memory().await.map_err(|e| e.to_string())?;
     let conversation_id = memory
         .start_conversation()
         .await

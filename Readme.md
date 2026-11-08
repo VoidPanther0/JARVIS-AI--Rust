@@ -46,7 +46,7 @@ crates/
   jarvis-voice/         Voice I/O trait shape (not implemented yet)
   jarvis-memory/        SQLite storage + migrations
   jarvis-platform/      Permission-checked system access
-docs/                   Development and architecture docs
+docs/                   Development, architecture, roadmap, and release docs
 .github/workflows/      CI and release automation
 ```
 
@@ -65,14 +65,25 @@ npm install
 npm run dev
 ```
 
+## Documentation
+
+- [docs/architecture.md](docs/architecture.md) — crate boundaries, the
+  permission layer, and how a chat message flows through the app.
+- [docs/roadmap.md](docs/roadmap.md) — what's implemented vs. planned, by
+  phase.
+- [docs/release-process.md](docs/release-process.md) — how a Windows
+  release is cut and verified.
+- [docs/security.md](docs/security.md) — the security model and its
+  current limitations.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) for the project's safety model and how to
-report vulnerabilities.
+See [SECURITY.md](SECURITY.md) for how to report vulnerabilities, and
+[docs/security.md](docs/security.md) for the project's security model.
 
 ## License
 

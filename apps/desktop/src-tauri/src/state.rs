@@ -21,13 +21,9 @@ impl AppState {
     }
 
     /// Opens the SQLite store on first use and reuses it afterwards.
-    pub async fn memory(&self) -> &MemoryStore {
+    pub async fn memory(&self) -> Result<&MemoryStore, jarvis_memory::MemoryError> {
         self.memory
-            .get_or_init(|| async {
-                MemoryStore::open(self.config.database_path())
-                    .await
-                    .expect("failed to open memory store")
-            })
+            .get_or_try_init(|| async { MemoryStore::open(self.config.database_path()).await })
             .await
     }
 }

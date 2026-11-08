@@ -58,3 +58,56 @@ impl AppConfig {
         self.data_dir.join("jarvis.sqlite3")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn environment_defaults_to_development() {
+        assert_eq!(Environment::default(), Environment::Development);
+    }
+
+    #[test]
+    fn database_path_joins_fixed_filename() {
+        let config = AppConfig {
+            environment: Environment::Development,
+            data_dir: PathBuf::from("/tmp/jarvis-data"),
+            log_level: "info".to_string(),
+            ai_provider: None,
+        };
+        assert_eq!(
+            config.database_path(),
+            PathBuf::from("/tmp/jarvis-data").join("jarvis.sqlite3")
+        );
+    }
+
+    #[test]
+    fn load_reads_environment_variables() {
+        // All env mutation happens inside this single test function (and
+        // is cleaned up at the end) so it can't race with other tests.
+        // SAFETY: no other thread in this test binary reads/writes these
+        // specific env vars concurrently.
+        unsafe {
+            std::env::set_var("JARVIS_ENV", "production");
+            std::env::set_var("JARVIS_DATA_DIR", "/tmp/jarvis-test-data");
+            std::env::set_var("JARVIS_LOG_LEVEL", "debug");
+            std::env::set_var("JARVIS_AI_PROVIDER", "null");
+        }
+
+        let config = AppConfig::load().expect("load should succeed with valid env vars");
+
+        assert_eq!(config.environment, Environment::Production);
+        assert_eq!(config.data_dir, PathBuf::from("/tmp/jarvis-test-data"));
+        assert_eq!(config.log_level, "debug");
+        assert_eq!(config.ai_provider.as_deref(), Some("null"));
+
+        // SAFETY: see above.
+        unsafe {
+            std::env::remove_var("JARVIS_ENV");
+            std::env::remove_var("JARVIS_DATA_DIR");
+            std::env::remove_var("JARVIS_LOG_LEVEL");
+            std::env::remove_var("JARVIS_AI_PROVIDER");
+        }
+    }
+}
